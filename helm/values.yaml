@@ -10,13 +10,34 @@ service:
   type: ClusterIP
   port: 8080
   targetPort: 8080
+  sessionAffinity: None
 
-# HPA configuration
+# HPA configuration with custom scaling behavior
 autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 5
   targetCPUUtilizationPercentage: 70
+  # Custom scaling behavior - scale up/down based on 30-second windows
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 30
+      policies:
+      - type: Percent
+        value: 100  # Can double the number of pods
+        periodSeconds: 30
+      - type: Pods
+        value: 2    # Can add max 2 pods at once
+        periodSeconds: 30
+    scaleDown:
+      stabilizationWindowSeconds: 30
+      policies:
+      - type: Percent
+        value: 50   # Can remove 50% of pods
+        periodSeconds: 30
+      - type: Pods
+        value: 1    # Remove max 1 pod at once
+        periodSeconds: 30
 
 # Health checks
 livenessProbe:
@@ -36,8 +57,8 @@ readinessProbe:
 # Resource limits
 resources:
   limits:
-    cpu: 500m
-    memory: 512Mi
+    cpu: 2048m
+    memory: 1024Mi
   requests:
-    cpu: 250m
-    memory: 256Mi
+    cpu: 1024m
+    memory: 512Mi
