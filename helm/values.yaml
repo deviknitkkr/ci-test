@@ -30,14 +30,14 @@ readinessProbe:
   httpGet:
     path: /actuator/health/readiness
     port: 8080
-  initialDelaySeconds: 60
-  periodSeconds: 60
+  initialDelaySeconds: 5
+  periodSeconds: 5
 
 # High-performance resource configuration for 4k TPS
 resources:
   limits:
     cpu: 2000m
-    memory: 2Gi
+    memory: 1Gi
   requests:
     cpu: 1000m
-    memory: 1Gi
+    memory: 500Mi
