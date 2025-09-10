@@ -7,7 +7,7 @@ image:
   tag: "0.1.5"
 
 service:
-  type: LoadBalancer
+  type: ClusterIP
   port: 8080
   targetPort: 8080
 
