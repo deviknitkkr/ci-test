@@ -8,7 +8,11 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ${{ github.actor }}/ci-test
+
+permissions:
+  contents: write
+  packages: write
 
 jobs:
   build-and-deploy:
@@ -39,18 +43,20 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build and push Docker image
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        push: true
-        tags: |
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+      run: |
+        # Convert repository name to lowercase for container registry
+        REPO_LOWER=$(echo "${{ env.IMAGE_NAME }}" | tr '[:upper:]' '[:lower:]')
+        docker build -t ${{ env.REGISTRY }}/${REPO_LOWER}:${{ steps.version.outputs.version }} .
+        docker tag ${{ env.REGISTRY }}/${REPO_LOWER}:${{ steps.version.outputs.version }} ${{ env.REGISTRY }}/${REPO_LOWER}:latest
+        docker push ${{ env.REGISTRY }}/${REPO_LOWER}:${{ steps.version.outputs.version }}
+        docker push ${{ env.REGISTRY }}/${REPO_LOWER}:latest
 
     - name: Update Helm chart
       run: |
+        # Convert repository name to lowercase for container registry
+        REPO_LOWER=$(echo "${{ env.IMAGE_NAME }}" | tr '[:upper:]' '[:lower:]')
         sed -i "s|tag:.*|tag: \"${{ steps.version.outputs.version }}\"|" helm/values.yaml
-        sed -i "s|repository:.*|repository: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}|" helm/values.yaml
+        sed -i "s|repository:.*|repository: ${{ env.REGISTRY }}/${REPO_LOWER}|" helm/values.yaml
         
     - name: Commit updated Helm chart
       run: |
