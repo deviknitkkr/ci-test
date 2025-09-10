@@ -21,17 +21,17 @@ autoscaling:
 # Health checks
 livenessProbe:
   httpGet:
-    path: /ping
+    path: /actuator/health
     port: 8080
   initialDelaySeconds: 30
   periodSeconds: 10
 
 readinessProbe:
   httpGet:
-    path: /ping
+    path: /actuator/health/readiness
     port: 8080
   initialDelaySeconds: 30
-  periodSeconds: 5
+  periodSeconds: 10
 
 # High-performance resource configuration for 4k TPS
 resources:
