@@ -1,0 +1,9 @@
+apiVersion: v2
+name: ci-test
+description: A Helm chart for the CI Test Spring Boot application
+
+type: application
+
+version: 0.1.0
+
+appVersion: "latest"
