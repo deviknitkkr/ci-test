@@ -1,5 +1,5 @@
 # Minimal values for ci-test application
-replicaCount: 2
+replicaCount: 1
 
 image:
   repository: ghcr.io/deviknitkkr/ci-test
@@ -12,30 +12,12 @@ service:
   targetPort: 8080
   sessionAffinity: None
 
-# Optimized HPA configuration with smooth scaling behavior
+# Simple HPA configuration for stable scaling
 autoscaling:
   enabled: true
-  minReplicas: 2
+  minReplicas: 1
   maxReplicas: 10
-  targetCPUUtilizationPercentage: 60
-  targetMemoryUtilizationPercentage: 70
-  behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 0  # Scale up immediately when needed
-      percentPolicy:
-        value: 100  # Can double pods quickly
-        periodSeconds: 15
-      podsPolicy:
-        value: 4  # Add up to 4 pods at once during high load
-        periodSeconds: 60
-    scaleDown:
-      stabilizationWindowSeconds: 300  # Wait 5 minutes before scaling down
-      percentPolicy:
-        value: 10  # Only reduce by 10% at a time
-        periodSeconds: 60
-      podsPolicy:
-        value: 1  # Remove only 1 pod at a time
-        periodSeconds: 60
+  targetCPUUtilizationPercentage: 70
 
 # Health checks
 livenessProbe:
@@ -44,23 +26,19 @@ livenessProbe:
     port: 8080
   initialDelaySeconds: 30
   periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 3
 
 readinessProbe:
   httpGet:
     path: /actuator/health/readiness
     port: 8080
-  initialDelaySeconds: 5
+  initialDelaySeconds: 10
   periodSeconds: 5
-  timeoutSeconds: 3
-  failureThreshold: 3
 
-# Optimized resource limits and requests for better load balancing
+# High-performance resource configuration for 4k TPS
 resources:
   limits:
+    cpu: 2000m
+    memory: 2Gi
+  requests:
     cpu: 1000m
     memory: 1Gi
-  requests:
-    cpu: 250m  # Lower CPU requests for better distribution
-    memory: 512Mi
