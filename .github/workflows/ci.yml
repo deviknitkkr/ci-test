@@ -46,7 +46,7 @@ jobs:
       run: |
         # Convert repository name to lowercase for container registry
         REPO_LOWER=$(echo "${{ env.IMAGE_NAME }}" | tr '[:upper:]' '[:lower:]')
-        docker build --platform linux/arm64 -t ${{ env.REGISTRY }}/${REPO_LOWER}:${{ steps.version.outputs.version }} .
+        docker build -t ${{ env.REGISTRY }}/${REPO_LOWER}:${{ steps.version.outputs.version }} .
         docker tag ${{ env.REGISTRY }}/${REPO_LOWER}:${{ steps.version.outputs.version }} ${{ env.REGISTRY }}/${REPO_LOWER}:latest
         docker push ${{ env.REGISTRY }}/${REPO_LOWER}:${{ steps.version.outputs.version }}
         docker push ${{ env.REGISTRY }}/${REPO_LOWER}:latest
