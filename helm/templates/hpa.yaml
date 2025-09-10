@@ -21,4 +21,33 @@ spec:
           type: Utilization
           averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
     {{- end }}
+    {{- if .Values.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: {{ .Values.autoscaling.behavior.scaleUp.stabilizationWindowSeconds | default 0 }}
+      policies:
+      - type: Percent
+        value: {{ .Values.autoscaling.behavior.scaleUp.percentPolicy.value | default 100 }}
+        periodSeconds: {{ .Values.autoscaling.behavior.scaleUp.percentPolicy.periodSeconds | default 15 }}
+      - type: Pods
+        value: {{ .Values.autoscaling.behavior.scaleUp.podsPolicy.value | default 2 }}
+        periodSeconds: {{ .Values.autoscaling.behavior.scaleUp.podsPolicy.periodSeconds | default 60 }}
+      selectPolicy: Max
+    scaleDown:
+      stabilizationWindowSeconds: {{ .Values.autoscaling.behavior.scaleDown.stabilizationWindowSeconds | default 300 }}
+      policies:
+      - type: Percent
+        value: {{ .Values.autoscaling.behavior.scaleDown.percentPolicy.value | default 10 }}
+        periodSeconds: {{ .Values.autoscaling.behavior.scaleDown.percentPolicy.periodSeconds | default 60 }}
+      - type: Pods
+        value: {{ .Values.autoscaling.behavior.scaleDown.podsPolicy.value | default 1 }}
+        periodSeconds: {{ .Values.autoscaling.behavior.scaleDown.podsPolicy.periodSeconds | default 60 }}
+      selectPolicy: Min
 {{- end }}
