@@ -8,13 +8,14 @@ import java.util.Map;
 
 @RestController
 public class PingController {
-
+    private static String podName = System.getenv("POD_NAME", "unknown");
     @GetMapping("/ping")
     public Map<String, Object> ping() {
         return Map.of(
             "status", "ok",
             "message", "pong",
-            "timestamp", LocalDateTime.now()
+            "timestamp", LocalDateTime.now(),
+            "podName", podName
         );
     }
 
