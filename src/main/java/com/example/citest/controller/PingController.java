@@ -8,7 +8,7 @@ import java.util.Map;
 
 @RestController
 public class PingController {
-    private static String podName = System.getenv("POD_NAME", "unknown");
+    private static String podName = System.getenv("POD_NAME");
     @GetMapping("/ping")
     public Map<String, Object> ping() {
         return Map.of(
