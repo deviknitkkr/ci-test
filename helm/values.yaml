@@ -1,5 +1,3 @@
-# Minimal values for ci-test application
-replicaCount: 2
 
 image:
   repository: ghcr.io/deviknitkkr/ci-test
@@ -24,9 +22,10 @@ ingress:
   tls: []
 
 # Simple HPA configuration for stable scaling
+replicaCount: 2
 autoscaling:
   enabled: true
-  minReplicas: 1
+  minReplicas:
   maxReplicas: 10
   targetCPUUtilizationPercentage: 70
 

@@ -24,19 +24,15 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    {{- range .Values.ingress.hosts }}
-    - host: {{ .host | quote }}
+    - host: "*"
       http:
         paths:
-          {{- range .paths }}
-          - path: {{ .path }}
-            pathType: {{ .pathType }}
+          - path: /
+            pathType: Prefix
             backend:
               service:
                 name: {{ include "ci-test.fullname" $ }}
                 port:
                   number: {{ $.Values.service.port }}
-          {{- end }}
-    {{- end }}
 {{- end }}
 
