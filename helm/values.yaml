@@ -1,5 +1,5 @@
 # Minimal values for ci-test application
-replicaCount: 1
+replicaCount: 2
 
 image:
   repository: ghcr.io/deviknitkkr/ci-test
@@ -10,6 +10,18 @@ service:
   type: ClusterIP
   port: 8080
   targetPort: 8080
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+  hosts:
+    - host: ci-test.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
 
 # Simple HPA configuration for stable scaling
 autoscaling:
