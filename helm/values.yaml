@@ -2,7 +2,7 @@
 image:
   repository: ghcr.io/deviknitkkr/ci-test
   pullPolicy: IfNotPresent
-  tag: "0.1.13"
+  tag: "0.1.14"
 
 service:
   type: ClusterIP
