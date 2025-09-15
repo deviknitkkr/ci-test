@@ -22,7 +22,7 @@ ingress:
   tls: []
 
 # Simple HPA configuration for stable scaling
-replicaCount: 2
+replicaCount: 1
 autoscaling:
   enabled: true
   minReplicas:
@@ -46,7 +46,7 @@ readinessProbe:
 # High-performance resource configuration for 4k TPS
 resources:
   limits:
-    cpu: 2000m
+    cpu: 4000m
     memory: 1Gi
   requests:
     cpu: 1000m
