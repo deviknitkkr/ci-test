@@ -27,7 +27,7 @@ autoscaling:
   enabled: true
   minReplicas:
   maxReplicas: 10
-  targetCPUUtilizationPercentage: 70
+  targetCPUUtilizationPercentage: 80
 
 # Health checks
 livenessProbe:
