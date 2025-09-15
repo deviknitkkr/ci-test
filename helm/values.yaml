@@ -27,7 +27,7 @@ autoscaling:
   enabled: true
   minReplicas:
   maxReplicas: 10
-  targetCPUUtilizationPercentage: 80
+  targetCPUUtilizationPercentage: 65
 
 # Health checks
 livenessProbe:
@@ -46,8 +46,7 @@ readinessProbe:
 # High-performance resource configuration for 4k TPS
 resources:
   limits:
-    cpu: 2000m
-    memory: 500Mi
+    memory: 1Gi
   requests:
-    cpu: 750m
+    cpu: 1000m
     memory: 500Mi
