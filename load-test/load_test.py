@@ -86,9 +86,9 @@ class IncrementalLoadTester:
             return 1.0
         return 1.0 / target_tps
 
-    async def make_request(self, session, endpoint="/ping"):
+    async def make_request(self, session):
         """Make a single HTTP request"""
-        url = f"{self.base_url}{endpoint}"
+        url = f"{self.base_url}"
         start_time = time.time()
 
         try:
@@ -456,9 +456,9 @@ def main():
     print("="*60)
 
     # Configuration
-    base_url = input("Enter your application URL (e.g., http://localhost:9080): ").strip()
+    base_url = input("Enter your application URL (e.g., http://localhost:9080/ping): ").strip()
     if not base_url:
-        base_url = "http://localhost:9080"
+        base_url = "http://localhost:9080/ping"
 
     print("\\n📈 Incremental Load Test Configuration:")
 

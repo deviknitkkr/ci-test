@@ -46,8 +46,8 @@ readinessProbe:
 # High-performance resource configuration for 4k TPS
 resources:
   limits:
-    cpu: 4000m
-    memory: 1Gi
+    cpu: 2000m
+    memory: 500Mi
   requests:
-    cpu: 1000m
+    cpu: 750m
     memory: 500Mi
