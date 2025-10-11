@@ -2,18 +2,18 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "helm.fullname" . }}-dashboard
+  name: {{ include "ci-test.fullname" . }}-dashboard
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "helm.labels" . | nindent 4 }}
+    {{- include "ci-test.labels" . | nindent 4 }}
     grafana_dashboard: "1"
 data:
   ci-test-dashboard.json: |
     {
       "dashboard": {
         "id": null,
-        "title": "{{ .Values.monitoring.dashboard.title | default (printf "%s Application Metrics" (include "helm.fullname" . | title)) }}",
-        "tags": ["spring-boot", "{{ include "helm.name" . }}"],
+        "title": "{{ .Values.monitoring.dashboard.title | default (printf "%s Application Metrics" (include "ci-test.fullname" . | title)) }}",
+        "tags": ["spring-boot", "{{ include "ci-test.name" . }}"],
         "timezone": "browser",
         "panels": [
           {
@@ -22,7 +22,7 @@ data:
             "type": "stat",
             "targets": [
               {
-                "expr": "rate(ping_requests_total{job=\"{{ include "helm.fullname" . }}\"}[5m])",
+                "expr": "rate(ping_requests_total{job=\"{{ include "ci-test.fullname" . }}\"}[5m])",
                 "legendFormat": "Requests/sec"
               }
             ],
@@ -49,7 +49,7 @@ data:
             "type": "stat",
             "targets": [
               {
-                "expr": "rate(ping_errors_total{job=\"{{ include "helm.fullname" . }}\"}[5m]) / rate(ping_requests_total{job=\"{{ include "helm.fullname" . }}\"}[5m]) * 100",
+                "expr": "rate(ping_errors_total{job=\"{{ include "ci-test.fullname" . }}\"}[5m]) / rate(ping_requests_total{job=\"{{ include "ci-test.fullname" . }}\"}[5m]) * 100",
                 "legendFormat": "Error Rate %"
               }
             ],
@@ -76,7 +76,7 @@ data:
             "type": "stat",
             "targets": [
               {
-                "expr": "histogram_quantile(0.95, rate(ping_request_duration_seconds_bucket{job=\"{{ include "helm.fullname" . }}\"}[5m]))",
+                "expr": "histogram_quantile(0.95, rate(ping_request_duration_seconds_bucket{job=\"{{ include "ci-test.fullname" . }}\"}[5m]))",
                 "legendFormat": "95th percentile"
               }
             ],
@@ -103,7 +103,7 @@ data:
             "type": "stat",
             "targets": [
               {
-                "expr": "up{job=\"{{ include "helm.fullname" . }}\"}",
+                "expr": "up{job=\"{{ include "ci-test.fullname" . }}\"}",
                 "legendFormat": "Active Pods"
               }
             ],
@@ -129,7 +129,7 @@ data:
             "type": "graph",
             "targets": [
               {
-                "expr": "rate(ping_requests_total{job=\"{{ include "helm.fullname" . }}\"}[5m])",
+                "expr": "rate(ping_requests_total{job=\"{{ include "ci-test.fullname" . }}\"}[5m])",
                 "legendFormat": "Requests/sec"
               }
             ],
@@ -147,15 +147,15 @@ data:
             "type": "graph",
             "targets": [
               {
-                "expr": "histogram_quantile(0.50, rate(ping_request_duration_seconds_bucket{job=\"{{ include "helm.fullname" . }}\"}[5m]))",
+                "expr": "histogram_quantile(0.50, rate(ping_request_duration_seconds_bucket{job=\"{{ include "ci-test.fullname" . }}\"}[5m]))",
                 "legendFormat": "50th percentile"
               },
               {
-                "expr": "histogram_quantile(0.95, rate(ping_request_duration_seconds_bucket{job=\"{{ include "helm.fullname" . }}\"}[5m]))",
+                "expr": "histogram_quantile(0.95, rate(ping_request_duration_seconds_bucket{job=\"{{ include "ci-test.fullname" . }}\"}[5m]))",
                 "legendFormat": "95th percentile"
               },
               {
-                "expr": "histogram_quantile(0.99, rate(ping_request_duration_seconds_bucket{job=\"{{ include "helm.fullname" . }}\"}[5m]))",
+                "expr": "histogram_quantile(0.99, rate(ping_request_duration_seconds_bucket{job=\"{{ include "ci-test.fullname" . }}\"}[5m]))",
                 "legendFormat": "99th percentile"
               }
             ],
@@ -173,7 +173,7 @@ data:
             "type": "graph",
             "targets": [
               {
-                "expr": "rate(ping_errors_total{job=\"{{ include "helm.fullname" . }}\"}[5m]) / rate(ping_requests_total{job=\"{{ include "helm.fullname" . }}\"}[5m]) * 100",
+                "expr": "rate(ping_errors_total{job=\"{{ include "ci-test.fullname" . }}\"}[5m]) / rate(ping_requests_total{job=\"{{ include "ci-test.fullname" . }}\"}[5m]) * 100",
                 "legendFormat": "Error Rate %"
               }
             ],

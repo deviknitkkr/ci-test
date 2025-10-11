@@ -2,13 +2,13 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: {{ include "helm.fullname" . }}-alerts
+  name: {{ include "ci-test.fullname" . }}-alerts
   labels:
-    {{- include "helm.labels" . | nindent 4 }}
+    {{- include "ci-test.labels" . | nindent 4 }}
     app.kubernetes.io/component: monitoring
 spec:
   groups:
-  - name: {{ include "helm.fullname" . }}.rules
+  - name: {{ include "ci-test.fullname" . }}.rules
     rules:
     - alert: HighErrorRate
       expr: |
@@ -18,10 +18,10 @@ spec:
       for: 2m
       labels:
         severity: warning
-        service: {{ include "helm.fullname" . }}
+        service: {{ include "ci-test.fullname" . }}
       annotations:
-        summary: "High error rate detected for {{ include "helm.fullname" . }}"
-        description: "Error rate is {{ "{{ $value | humanizePercentage }}" }} for {{ include "helm.fullname" . }}"
+        summary: "High error rate detected for {{ include "ci-test.fullname" . }}"
+        description: "Error rate is {{ "{{ $value | humanizePercentage }}" }} for {{ include "ci-test.fullname" . }}"
 
     - alert: HighLatency
       expr: |
@@ -29,10 +29,10 @@ spec:
       for: 2m
       labels:
         severity: warning
-        service: {{ include "helm.fullname" . }}
+        service: {{ include "ci-test.fullname" . }}
       annotations:
-        summary: "High latency detected for {{ include "helm.fullname" . }}"
-        description: "95th percentile latency is {{ "{{ $value }}" }}s for {{ include "helm.fullname" . }}"
+        summary: "High latency detected for {{ include "ci-test.fullname" . }}"
+        description: "95th percentile latency is {{ "{{ $value }}" }}s for {{ include "ci-test.fullname" . }}"
 
     - alert: LowThroughput
       expr: |
@@ -40,20 +40,20 @@ spec:
       for: 5m
       labels:
         severity: info
-        service: {{ include "helm.fullname" . }}
+        service: {{ include "ci-test.fullname" . }}
       annotations:
-        summary: "Low throughput detected for {{ include "helm.fullname" . }}"
-        description: "Request rate is {{ "{{ $value }}" }} requests/sec for {{ include "helm.fullname" . }}"
+        summary: "Low throughput detected for {{ include "ci-test.fullname" . }}"
+        description: "Request rate is {{ "{{ $value }}" }} requests/sec for {{ include "ci-test.fullname" . }}"
 
     - alert: ServiceDown
       expr: |
-        up{job="{{ include "helm.fullname" . }}"} == 0
+        up{job="{{ include "ci-test.fullname" . }}"} == 0
       for: 1m
       labels:
         severity: critical
-        service: {{ include "helm.fullname" . }}
+        service: {{ include "ci-test.fullname" . }}
       annotations:
-        summary: "{{ include "helm.fullname" . }} service is down"
-        description: "{{ include "helm.fullname" . }} service has been down for more than 1 minute"
+        summary: "{{ include "ci-test.fullname" . }} service is down"
+        description: "{{ include "ci-test.fullname" . }} service has been down for more than 1 minute"
 {{- end }}
 
