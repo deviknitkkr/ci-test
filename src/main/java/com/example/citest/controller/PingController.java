@@ -39,7 +39,7 @@ public class PingController {
     }
 
     @GetMapping("/ping")
-    public Map<String, Object> ping() {
+    public Map<String, Object> ping() throws Exception{
         return pingRequestTimer.recordCallable(() -> {
             pingRequestCounter.increment();
 
