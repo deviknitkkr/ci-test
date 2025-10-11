@@ -1,4 +1,3 @@
-
 image:
   repository: ghcr.io/deviknitkkr/ci-test
   pullPolicy: IfNotPresent
@@ -50,3 +49,14 @@ resources:
   requests:
     cpu: 1000m
     memory: 500Mi
+
+# Monitoring configuration
+monitoring:
+  enabled: true
+  dashboard:
+    enabled: true
+    title: "CI-Test Application Metrics"
+  alerts:
+    errorRateThreshold: 0.05  # 5% error rate threshold
+    latencyThreshold: 1.0     # 1 second latency threshold
+    throughputThreshold: 1.0  # 1 request/sec minimum throughput

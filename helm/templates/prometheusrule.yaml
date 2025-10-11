@@ -1,0 +1,59 @@
+{{- if .Values.monitoring.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "helm.fullname" . }}-alerts
+  labels:
+    {{- include "helm.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  groups:
+  - name: {{ include "helm.fullname" . }}.rules
+    rules:
+    - alert: HighErrorRate
+      expr: |
+        (
+          rate(ping_errors_total[5m]) / rate(ping_requests_total[5m])
+        ) > {{ .Values.monitoring.alerts.errorRateThreshold }}
+      for: 2m
+      labels:
+        severity: warning
+        service: {{ include "helm.fullname" . }}
+      annotations:
+        summary: "High error rate detected for {{ include "helm.fullname" . }}"
+        description: "Error rate is {{ "{{ $value | humanizePercentage }}" }} for {{ include "helm.fullname" . }}"
+
+    - alert: HighLatency
+      expr: |
+        histogram_quantile(0.95, rate(ping_request_duration_seconds_bucket[5m])) > {{ .Values.monitoring.alerts.latencyThreshold }}
+      for: 2m
+      labels:
+        severity: warning
+        service: {{ include "helm.fullname" . }}
+      annotations:
+        summary: "High latency detected for {{ include "helm.fullname" . }}"
+        description: "95th percentile latency is {{ "{{ $value }}" }}s for {{ include "helm.fullname" . }}"
+
+    - alert: LowThroughput
+      expr: |
+        rate(ping_requests_total[5m]) < {{ .Values.monitoring.alerts.throughputThreshold }}
+      for: 5m
+      labels:
+        severity: info
+        service: {{ include "helm.fullname" . }}
+      annotations:
+        summary: "Low throughput detected for {{ include "helm.fullname" . }}"
+        description: "Request rate is {{ "{{ $value }}" }} requests/sec for {{ include "helm.fullname" . }}"
+
+    - alert: ServiceDown
+      expr: |
+        up{job="{{ include "helm.fullname" . }}"} == 0
+      for: 1m
+      labels:
+        severity: critical
+        service: {{ include "helm.fullname" . }}
+      annotations:
+        summary: "{{ include "helm.fullname" . }} service is down"
+        description: "{{ include "helm.fullname" . }} service has been down for more than 1 minute"
+{{- end }}
+

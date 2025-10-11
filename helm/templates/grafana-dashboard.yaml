@@ -1,0 +1,198 @@
+{{- if and .Values.monitoring.enabled .Values.monitoring.dashboard.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "helm.fullname" . }}-dashboard
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "helm.labels" . | nindent 4 }}
+    grafana_dashboard: "1"
+data:
+  ci-test-dashboard.json: |
+    {
+      "dashboard": {
+        "id": null,
+        "title": "{{ .Values.monitoring.dashboard.title | default (printf "%s Application Metrics" (include "helm.fullname" . | title)) }}",
+        "tags": ["spring-boot", "{{ include "helm.name" . }}"],
+        "timezone": "browser",
+        "panels": [
+          {
+            "id": 1,
+            "title": "Request Rate (TPS)",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "rate(ping_requests_total{job=\"{{ include "helm.fullname" . }}\"}[5m])",
+                "legendFormat": "Requests/sec"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "reqps",
+                "color": {
+                  "mode": "thresholds"
+                },
+                "thresholds": {
+                  "steps": [
+                    {"color": "red", "value": 0},
+                    {"color": "yellow", "value": 1},
+                    {"color": "green", "value": 10}
+                  ]
+                }
+              }
+            },
+            "gridPos": {"h": 8, "w": 6, "x": 0, "y": 0}
+          },
+          {
+            "id": 2,
+            "title": "Error Rate",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "rate(ping_errors_total{job=\"{{ include "helm.fullname" . }}\"}[5m]) / rate(ping_requests_total{job=\"{{ include "helm.fullname" . }}\"}[5m]) * 100",
+                "legendFormat": "Error Rate %"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "percent",
+                "color": {
+                  "mode": "thresholds"
+                },
+                "thresholds": {
+                  "steps": [
+                    {"color": "green", "value": 0},
+                    {"color": "yellow", "value": 1},
+                    {"color": "red", "value": 5}
+                  ]
+                }
+              }
+            },
+            "gridPos": {"h": 8, "w": 6, "x": 6, "y": 0}
+          },
+          {
+            "id": 3,
+            "title": "95th Percentile Latency",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.95, rate(ping_request_duration_seconds_bucket{job=\"{{ include "helm.fullname" . }}\"}[5m]))",
+                "legendFormat": "95th percentile"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "s",
+                "color": {
+                  "mode": "thresholds"
+                },
+                "thresholds": {
+                  "steps": [
+                    {"color": "green", "value": 0},
+                    {"color": "yellow", "value": 0.5},
+                    {"color": "red", "value": 1}
+                  ]
+                }
+              }
+            },
+            "gridPos": {"h": 8, "w": 6, "x": 12, "y": 0}
+          },
+          {
+            "id": 4,
+            "title": "Active Pods",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "up{job=\"{{ include "helm.fullname" . }}\"}",
+                "legendFormat": "Active Pods"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "color": {
+                  "mode": "thresholds"
+                },
+                "thresholds": {
+                  "steps": [
+                    {"color": "red", "value": 0},
+                    {"color": "green", "value": 1}
+                  ]
+                }
+              }
+            },
+            "gridPos": {"h": 8, "w": 6, "x": 18, "y": 0}
+          },
+          {
+            "id": 5,
+            "title": "Request Rate Over Time",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "rate(ping_requests_total{job=\"{{ include "helm.fullname" . }}\"}[5m])",
+                "legendFormat": "Requests/sec"
+              }
+            ],
+            "yAxes": [
+              {
+                "label": "Requests/sec",
+                "min": 0
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+          },
+          {
+            "id": 6,
+            "title": "Response Time Distribution",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.50, rate(ping_request_duration_seconds_bucket{job=\"{{ include "helm.fullname" . }}\"}[5m]))",
+                "legendFormat": "50th percentile"
+              },
+              {
+                "expr": "histogram_quantile(0.95, rate(ping_request_duration_seconds_bucket{job=\"{{ include "helm.fullname" . }}\"}[5m]))",
+                "legendFormat": "95th percentile"
+              },
+              {
+                "expr": "histogram_quantile(0.99, rate(ping_request_duration_seconds_bucket{job=\"{{ include "helm.fullname" . }}\"}[5m]))",
+                "legendFormat": "99th percentile"
+              }
+            ],
+            "yAxes": [
+              {
+                "label": "Seconds",
+                "min": 0
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+          },
+          {
+            "id": 7,
+            "title": "Error Rate Over Time",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "rate(ping_errors_total{job=\"{{ include "helm.fullname" . }}\"}[5m]) / rate(ping_requests_total{job=\"{{ include "helm.fullname" . }}\"}[5m]) * 100",
+                "legendFormat": "Error Rate %"
+              }
+            ],
+            "yAxes": [
+              {
+                "label": "Percent",
+                "min": 0,
+                "max": 100
+              }
+            ],
+            "gridPos": {"h": 8, "w": 24, "x": 0, "y": 16}
+          }
+        ],
+        "time": {
+          "from": "now-1h",
+          "to": "now"
+        },
+        "refresh": "5s"
+      }
+    }
+{{- end }}
+
