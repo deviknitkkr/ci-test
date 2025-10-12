@@ -1,0 +1,13 @@
+{{- if .Values.monitoring.dashboard.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ci-test.fullname" . }}-grafana-dashboard
+  labels:
+    {{- include "ci-test.labels" . | nindent 4 }}
+    grafana_dashboard: "1"
+data:
+  spring-boot-dashboard.json: |
+{{ .Files.Get "dashboards/spring-boot-dashboard.json" | indent 4 }}
+{{- end }}
+
