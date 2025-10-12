@@ -102,13 +102,13 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "rate(http_server_requests_seconds_count{job=\"$job\", instance=\"$instance\"}[5m])",
+          "expr": "rate(http_server_requests_seconds_count[5m])",
           "interval": "",
-          "legendFormat": "{{method}} {{uri}} - {{status}}",
+          "legendFormat": "{{method}} {{uri}} ({{status}})",
           "refId": "A"
         }
       ],
-      "title": "HTTP Request Rate",
+      "title": "TPS (Transactions Per Second) by API",
       "type": "timeseries"
     },
     {
@@ -191,13 +191,195 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "rate(http_server_requests_seconds_sum{job=\"$job\", instance=\"$instance\"}[5m]) / rate(http_server_requests_seconds_count{job=\"$job\", instance=\"$instance\"}[5m])",
+          "expr": "rate(http_server_requests_seconds_sum[5m]) / rate(http_server_requests_seconds_count[5m])",
           "interval": "",
-          "legendFormat": "{{method}} {{uri}} - {{status}}",
+          "legendFormat": "{{method}} {{uri}} - Avg Latency",
           "refId": "A"
         }
       ],
-      "title": "HTTP Request Duration",
+      "title": "Average Latency by API",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "http_server_requests_seconds_max",
+          "interval": "",
+          "legendFormat": "{{method}} {{uri}} - Max Latency",
+          "refId": "A"
+        }
+      ],
+      "title": "Max Latency by API (P90 equivalent)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 0.01
+              },
+              {
+                "color": "red",
+                "value": 0.05
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "rate(http_server_requests_seconds_count{status=~\"4..|5..\"}[5m]) / rate(http_server_requests_seconds_count[5m])",
+          "interval": "",
+          "legendFormat": "{{method}} {{uri}} - Error Rate",
+          "refId": "A"
+        }
+      ],
+      "title": "Error Rate by API (4xx/5xx)",
       "type": "timeseries"
     },
     {
@@ -260,9 +442,9 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 8
+        "y": 16
       },
-      "id": 3,
+      "id": 5,
       "options": {
         "legend": {
           "calcs": [],
@@ -280,7 +462,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "jvm_memory_used_bytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "jvm_memory_used_bytes",
           "interval": "",
           "legendFormat": "{{area}} - {{id}}",
           "refId": "A"
@@ -349,9 +531,9 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 8
+        "y": 16
       },
-      "id": 4,
+      "id": 6,
       "options": {
         "legend": {
           "calcs": [],
@@ -369,7 +551,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "jvm_threads_live_threads{job=\"$job\", instance=\"$instance\"}",
+          "expr": "jvm_threads_live_threads",
           "interval": "",
           "legendFormat": "Live Threads",
           "refId": "A"
@@ -379,10 +561,20 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "jvm_threads_daemon_threads{job=\"$job\", instance=\"$instance\"}",
+          "expr": "jvm_threads_daemon_threads",
           "interval": "",
           "legendFormat": "Daemon Threads",
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "jvm_threads_peak_threads",
+          "interval": "",
+          "legendFormat": "Peak Threads",
+          "refId": "C"
         }
       ],
       "title": "JVM Threads",
@@ -448,9 +640,9 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 16
+        "y": 24
       },
-      "id": 5,
+      "id": 7,
       "options": {
         "legend": {
           "calcs": [],
@@ -468,7 +660,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "rate(jvm_gc_pause_seconds_sum{job=\"$job\", instance=\"$instance\"}[5m])",
+          "expr": "rate(jvm_gc_pause_seconds_sum[5m])",
           "interval": "",
           "legendFormat": "{{gc}} - {{action}}",
           "refId": "A"
@@ -537,9 +729,9 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 16
+        "y": 24
       },
-      "id": 6,
+      "id": 8,
       "options": {
         "legend": {
           "calcs": [],
@@ -557,7 +749,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "process_cpu_usage{job=\"$job\", instance=\"$instance\"}",
+          "expr": "process_cpu_usage",
           "interval": "",
           "legendFormat": "Process CPU",
           "refId": "A"
@@ -567,7 +759,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "system_cpu_usage{job=\"$job\", instance=\"$instance\"}",
+          "expr": "system_cpu_usage",
           "interval": "",
           "legendFormat": "System CPU",
           "refId": "B"
@@ -604,60 +796,6 @@
         "regex": "",
         "skipUrlSync": false,
         "type": "datasource"
-      },
-      {
-        "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${datasource}"
-        },
-        "definition": "label_values(http_server_requests_seconds_count, job)",
-        "hide": 0,
-        "includeAll": true,
-        "label": "Job",
-        "multi": true,
-        "name": "job",
-        "options": [],
-        "query": {
-          "query": "label_values(http_server_requests_seconds_count, job)",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
-      },
-      {
-        "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${datasource}"
-        },
-        "definition": "label_values(http_server_requests_seconds_count{job=~\"$job\"}, instance)",
-        "hide": 0,
-        "includeAll": true,
-        "label": "Instance",
-        "multi": true,
-        "name": "instance",
-        "options": [],
-        "query": {
-          "query": "label_values(http_server_requests_seconds_count{job=~\"$job\"}, instance)",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
       }
     ]
   },
@@ -672,4 +810,3 @@
   "version": 1,
   "weekStart": ""
 }
-
