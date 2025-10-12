@@ -312,13 +312,13 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "count(up == 1)",
+          "expr": "count(up{job=\"ci-test\"} == 1)",
           "interval": "",
-          "legendFormat": "Running Instances",
+          "legendFormat": "App Pods",
           "refId": "A"
         }
       ],
-      "title": "Instance Count",
+      "title": "App Pod Count",
       "type": "timeseries"
     },
     {
@@ -722,7 +722,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 8,
+        "w": 6,
         "x": 0,
         "y": 22
       },
@@ -811,8 +811,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 8,
-        "x": 8,
+        "w": 6,
+        "x": 6,
         "y": 22
       },
       "id": 7,
@@ -920,8 +920,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 8,
-        "x": 16,
+        "w": 6,
+        "x": 12,
         "y": 22
       },
       "id": 8,
@@ -1003,7 +1003,7 @@
               }
             ]
           },
-          "unit": "percentunit"
+          "unit": "bytes"
         },
         "overrides": []
       },
@@ -1013,7 +1013,7 @@
         "x": 18,
         "y": 22
       },
-      "id": 9,
+      "id": 15,
       "options": {
         "legend": {
           "calcs": [],
@@ -1031,23 +1031,13 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "avg(process_cpu_usage)",
+          "expr": "sum(jvm_memory_max_bytes) by (area, id)",
           "interval": "",
-          "legendFormat": "Average CPU Usage",
+          "legendFormat": "{{area}} - {{id}} Max",
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "expr": "max(process_cpu_usage)",
-          "interval": "",
-          "legendFormat": "Max CPU Usage",
-          "refId": "B"
         }
       ],
-      "title": "CPU Usage (Avg & Max)",
+      "title": "JVM Memory Max",
       "type": "timeseries"
     }
   ],
