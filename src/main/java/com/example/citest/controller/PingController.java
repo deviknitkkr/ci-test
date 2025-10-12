@@ -1,6 +1,5 @@
 package com.example.citest.controller;
 
-import io.micrometer.core.annotation.Timed;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,7 +13,6 @@ public class PingController {
     private final Random random = new Random();
 
     @GetMapping("/ping")
-    @Timed(value = "ping_request_duration", description = "Time taken to process ping requests")
     public Map<String, Object> ping() throws Exception {
         // Simulate occasional errors (5% of the time)
         if (random.nextDouble() < 0.05) {
