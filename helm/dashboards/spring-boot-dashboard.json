@@ -106,7 +106,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
+        "w": 6,
         "x": 0,
         "y": 2
       },
@@ -128,7 +128,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(rate(http_server_requests_seconds_count[5m]))",
+          "expr": "sum(rate(http_server_requests_seconds_count[1m]))",
           "interval": "",
           "legendFormat": "Total TPS",
           "refId": "A"
@@ -201,8 +201,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 12,
+        "w": 6,
+        "x": 6,
         "y": 2
       },
       "id": 2,
@@ -223,7 +223,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(rate(http_server_requests_seconds_count{status!~\"5..\"}[5m])) / sum(rate(http_server_requests_seconds_count[5m]))",
+          "expr": "sum(rate(http_server_requests_seconds_count{status!~\"5..\"}[1m])) / sum(rate(http_server_requests_seconds_count[1m]))",
           "interval": "",
           "legendFormat": "Availability (Non-5xx)",
           "refId": "A"
@@ -316,7 +316,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 8,
+        "w": 6,
         "x": 0,
         "y": 12
       },
@@ -338,7 +338,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(rate(http_server_requests_seconds_count{uri=\"/ping\"}[5m]))",
+          "expr": "sum(rate(http_server_requests_seconds_count{uri=\"/ping\"}[1m]))",
           "interval": "",
           "legendFormat": "/ping TPS",
           "refId": "A"
@@ -405,8 +405,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 8,
-        "x": 8,
+        "w": 6,
+        "x": 6,
         "y": 12
       },
       "id": 4,
@@ -427,7 +427,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(rate(http_server_requests_seconds_sum{uri=\"/ping\"}[5m])) / sum(rate(http_server_requests_seconds_count{uri=\"/ping\"}[5m]))",
+          "expr": "sum(rate(http_server_requests_seconds_sum{uri=\"/ping\"}[1m])) / sum(rate(http_server_requests_seconds_count{uri=\"/ping\"}[1m]))",
           "interval": "",
           "legendFormat": "Average Latency",
           "refId": "A"
@@ -437,23 +437,13 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "histogram_quantile(0.50, sum(rate(http_server_requests_seconds_bucket{uri=\"/ping\"}[5m])) by (le))",
+          "expr": "http_server_requests_seconds_max{uri=\"/ping\"}",
           "interval": "",
-          "legendFormat": "P50 Latency",
+          "legendFormat": "Max Latency",
           "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "expr": "histogram_quantile(0.90, sum(rate(http_server_requests_seconds_bucket{uri=\"/ping\"}[5m])) by (le))",
-          "interval": "",
-          "legendFormat": "P90 Latency",
-          "refId": "C"
         }
       ],
-      "title": "Latency - /ping API (Avg, P50, P90)",
+      "title": "Latency - /ping API (Avg & Max)",
       "type": "timeseries"
     },
     {
@@ -518,8 +508,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 8,
-        "x": 16,
+        "w": 6,
+        "x": 12,
         "y": 12
       },
       "id": 5,
@@ -540,7 +530,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(rate(http_server_requests_seconds_count{uri=\"/ping\", status=~\"4..\"}[5m])) / sum(rate(http_server_requests_seconds_count{uri=\"/ping\"}[5m]))",
+          "expr": "sum(rate(http_server_requests_seconds_count{uri=\"/ping\", status=~\"4..\"}[1m])) / sum(rate(http_server_requests_seconds_count{uri=\"/ping\"}[1m]))",
           "interval": "",
           "legendFormat": "4xx Error Rate",
           "refId": "A"
@@ -550,7 +540,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(rate(http_server_requests_seconds_count{uri=\"/ping\", status=~\"5..\"}[5m])) / sum(rate(http_server_requests_seconds_count{uri=\"/ping\"}[5m]))",
+          "expr": "sum(rate(http_server_requests_seconds_count{uri=\"/ping\", status=~\"5..\"}[1m])) / sum(rate(http_server_requests_seconds_count{uri=\"/ping\"}[1m]))",
           "interval": "",
           "legendFormat": "5xx Error Rate",
           "refId": "B"
@@ -863,7 +853,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(rate(jvm_gc_pause_seconds_sum[5m]))",
+          "expr": "sum(rate(jvm_gc_pause_seconds_sum[1m]))",
           "interval": "",
           "legendFormat": "GC Pause Time",
           "refId": "A"
@@ -969,6 +959,323 @@
         }
       ],
       "title": "CPU Usage (Avg & Max)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "text",
+        "uid": "-- Mixed --"
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 30
+      },
+      "id": 103,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "# Additional Metrics",
+        "mode": "markdown"
+      },
+      "pluginVersion": "10.0.0",
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 32
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "sum(rate(http_server_requests_seconds_count{uri!=\"/ping\"}[1m]))",
+          "interval": "",
+          "legendFormat": "Total TPS (Excluding /ping)",
+          "refId": "A"
+        }
+      ],
+      "title": "Total TPS (Excluding /ping)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 32
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "sum(rate(http_server_requests_seconds_sum{uri!=\"/ping\"}[1m])) / sum(rate(http_server_requests_seconds_count{uri!=\"/ping\"}[1m]))",
+          "interval": "",
+          "legendFormat": "Average Latency (Excluding /ping)",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "http_server_requests_seconds_max{uri!=\"/ping\"}",
+          "interval": "",
+          "legendFormat": "Max Latency (Excluding /ping)",
+          "refId": "B"
+        }
+      ],
+      "title": "Latency (Excluding /ping) - Avg & Max",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 0.01
+              },
+              {
+                "color": "red",
+                "value": 0.05
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 32
+      },
+      "id": 15,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "sum(rate(http_server_requests_seconds_count{uri!=\"/ping\", status=~\"4..\"}[1m])) / sum(rate(http_server_requests_seconds_count{uri!=\"/ping\"}[1m]))",
+          "interval": "",
+          "legendFormat": "4xx Error Rate (Excluding /ping)",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "sum(rate(http_server_requests_seconds_count{uri!=\"/ping\", status=~\"5..\"}[1m])) / sum(rate(http_server_requests_seconds_count{uri!=\"/ping\"}[1m]))",
+          "interval": "",
+          "legendFormat": "5xx Error Rate (Excluding /ping)",
+          "refId": "B"
+        }
+      ],
+      "title": "Error Rate (Excluding /ping) - 4xx vs 5xx",
       "type": "timeseries"
     }
   ],
