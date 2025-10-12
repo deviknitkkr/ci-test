@@ -24,6 +24,32 @@
   "panels": [
     {
       "datasource": {
+        "type": "text",
+        "uid": "-- Mixed --"
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 101,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "# Overview",
+        "mode": "markdown"
+      },
+      "pluginVersion": "10.0.0",
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": {
         "type": "prometheus",
         "uid": "${datasource}"
       },
@@ -80,9 +106,9 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
+        "w": 12,
         "x": 0,
-        "y": 0
+        "y": 2
       },
       "id": 1,
       "options": {
@@ -175,9 +201,9 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
-        "x": 6,
-        "y": 0
+        "w": 12,
+        "x": 12,
+        "y": 2
       },
       "id": 2,
       "options": {
@@ -208,6 +234,32 @@
     },
     {
       "datasource": {
+        "type": "text",
+        "uid": "-- Mixed --"
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 10
+      },
+      "id": 102,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "# APIs",
+        "mode": "markdown"
+      },
+      "pluginVersion": "10.0.0",
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": {
         "type": "prometheus",
         "uid": "${datasource}"
       },
@@ -264,193 +316,11 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
-        "x": 12,
-        "y": 0
+        "w": 8,
+        "x": 0,
+        "y": 12
       },
       "id": 3,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "expr": "sum(rate(http_server_requests_seconds_count[5m])) by (uri)",
-          "interval": "",
-          "legendFormat": "{{uri}}",
-          "refId": "A"
-        }
-      ],
-      "title": "TPS by API Endpoint",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${datasource}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "vis": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 0.01
-              },
-              {
-                "color": "red",
-                "value": 0.05
-              }
-            ]
-          },
-          "unit": "percentunit"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 18,
-        "y": 0
-      },
-      "id": 4,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "expr": "sum(rate(http_server_requests_seconds_count{status=~\"4..|5..\"}[5m])) / sum(rate(http_server_requests_seconds_count[5m]))",
-          "interval": "",
-          "legendFormat": "Overall Error Rate",
-          "refId": "A"
-        }
-      ],
-      "title": "Overall Error Rate (4xx/5xx)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${datasource}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "vis": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "reqps"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 0,
-        "y": 8
-      },
-      "id": 5,
       "options": {
         "legend": {
           "calcs": [],
@@ -535,11 +405,11 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
-        "x": 6,
-        "y": 8
+        "w": 8,
+        "x": 8,
+        "y": 12
       },
-      "id": 6,
+      "id": 4,
       "options": {
         "legend": {
           "calcs": [],
@@ -567,9 +437,9 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "histogram_quantile(0.90, sum(rate(http_server_requests_seconds_bucket{uri=\"/ping\"}[5m])) by (le))",
+          "expr": "histogram_quantile(0.50, sum(rate(http_server_requests_seconds_bucket{uri=\"/ping\"}[5m])) by (le))",
           "interval": "",
-          "legendFormat": "P90 Latency",
+          "legendFormat": "P50 Latency",
           "refId": "B"
         },
         {
@@ -577,13 +447,13 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{uri=\"/ping\"}[5m])) by (le))",
+          "expr": "histogram_quantile(0.90, sum(rate(http_server_requests_seconds_bucket{uri=\"/ping\"}[5m])) by (le))",
           "interval": "",
-          "legendFormat": "P95 Latency",
+          "legendFormat": "P90 Latency",
           "refId": "C"
         }
       ],
-      "title": "Latency - /ping API (Avg, P90, P95)",
+      "title": "Latency - /ping API (Avg, P50, P90)",
       "type": "timeseries"
     },
     {
@@ -648,11 +518,11 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
-        "x": 12,
-        "y": 8
+        "w": 8,
+        "x": 16,
+        "y": 12
       },
-      "id": 7,
+      "id": 5,
       "options": {
         "legend": {
           "calcs": [],
@@ -670,102 +540,23 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(rate(http_server_requests_seconds_count{uri=\"/ping\", status=~\"4..|5..\"}[5m])) / sum(rate(http_server_requests_seconds_count{uri=\"/ping\"}[5m]))",
+          "expr": "sum(rate(http_server_requests_seconds_count{uri=\"/ping\", status=~\"4..\"}[5m])) / sum(rate(http_server_requests_seconds_count{uri=\"/ping\"}[5m]))",
           "interval": "",
-          "legendFormat": "/ping Error Rate",
+          "legendFormat": "4xx Error Rate",
           "refId": "A"
-        }
-      ],
-      "title": "Error Rate - /ping API (4xx/5xx)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${datasource}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "vis": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "s"
         },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 18,
-        "y": 8
-      },
-      "id": 8,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(rate(http_server_requests_seconds_sum[5m])) by (uri) / sum(rate(http_server_requests_seconds_count[5m])) by (uri)",
+          "expr": "sum(rate(http_server_requests_seconds_count{uri=\"/ping\", status=~\"5..\"}[5m])) / sum(rate(http_server_requests_seconds_count{uri=\"/ping\"}[5m]))",
           "interval": "",
-          "legendFormat": "{{uri}} - Avg Latency",
-          "refId": "A"
+          "legendFormat": "5xx Error Rate",
+          "refId": "B"
         }
       ],
-      "title": "Average Latency by API",
+      "title": "Error Rate - /ping API (4xx vs 5xx)",
       "type": "timeseries"
     },
     {
@@ -777,7 +568,7 @@
         "h": 2,
         "w": 24,
         "x": 0,
-        "y": 16
+        "y": 20
       },
       "id": 100,
       "options": {
@@ -854,9 +645,9 @@
         "h": 8,
         "w": 6,
         "x": 0,
-        "y": 18
+        "y": 22
       },
-      "id": 9,
+      "id": 6,
       "options": {
         "legend": {
           "calcs": [],
@@ -874,7 +665,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "jvm_memory_used_bytes",
+          "expr": "sum(jvm_memory_used_bytes) by (area, id)",
           "interval": "",
           "legendFormat": "{{area}} - {{id}}",
           "refId": "A"
@@ -943,9 +734,9 @@
         "h": 8,
         "w": 6,
         "x": 6,
-        "y": 18
+        "y": 22
       },
-      "id": 10,
+      "id": 7,
       "options": {
         "legend": {
           "calcs": [],
@@ -963,7 +754,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "jvm_threads_live_threads",
+          "expr": "sum(jvm_threads_live_threads)",
           "interval": "",
           "legendFormat": "Live Threads",
           "refId": "A"
@@ -973,7 +764,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "jvm_threads_daemon_threads",
+          "expr": "sum(jvm_threads_daemon_threads)",
           "interval": "",
           "legendFormat": "Daemon Threads",
           "refId": "B"
@@ -983,7 +774,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "jvm_threads_peak_threads",
+          "expr": "sum(jvm_threads_peak_threads)",
           "interval": "",
           "legendFormat": "Peak Threads",
           "refId": "C"
@@ -1052,9 +843,9 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 18
+        "y": 22
       },
-      "id": 11,
+      "id": 8,
       "options": {
         "legend": {
           "calcs": [],
@@ -1072,9 +863,9 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "rate(jvm_gc_pause_seconds_sum[5m])",
+          "expr": "sum(rate(jvm_gc_pause_seconds_sum[5m]))",
           "interval": "",
-          "legendFormat": "{{gc}} - {{action}}",
+          "legendFormat": "GC Pause Time",
           "refId": "A"
         }
       ],
@@ -1141,9 +932,9 @@
         "h": 8,
         "w": 6,
         "x": 18,
-        "y": 18
+        "y": 22
       },
-      "id": 12,
+      "id": 9,
       "options": {
         "legend": {
           "calcs": [],
@@ -1161,9 +952,9 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "process_cpu_usage",
+          "expr": "avg(process_cpu_usage)",
           "interval": "",
-          "legendFormat": "Process CPU",
+          "legendFormat": "Average CPU Usage",
           "refId": "A"
         },
         {
@@ -1171,13 +962,13 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "system_cpu_usage",
+          "expr": "max(process_cpu_usage)",
           "interval": "",
-          "legendFormat": "System CPU",
+          "legendFormat": "Max CPU Usage",
           "refId": "B"
         }
       ],
-      "title": "CPU Usage",
+      "title": "CPU Usage (Avg & Max)",
       "type": "timeseries"
     }
   ],
