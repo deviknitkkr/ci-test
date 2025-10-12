@@ -16,6 +16,8 @@ helm upgrade --install prometheus-stack prometheus-community/kube-prometheus-sta
   --version 78.0.0 \
   --values prometheus-values.yaml
 
+kubectl -n monitoring port-forward svc/prometheus-stack-grafana 3000:3000
+
 k3d image import registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.6.3
 k3d image import registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.17.0
 k3d image import docker.io/library/busybox:1.31.1
